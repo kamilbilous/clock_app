@@ -23,10 +23,14 @@ class Clock(QWidget):
         self.setLayout(vbox)
 
         self.TimeLabel.setAlignment(Qt.AlignCenter)
-        self.TimeLabel.setStyleSheet("background-color:black;"
-                                     "font-size: 120px;"
-                                     "font-weight: bold;"
-                                     "color: white;")
+        self.setStyleSheet("""
+        QWidget{
+        background-color: black;
+        color: white;
+        font-size: 120px;
+        font-weight: bold;
+        }
+        """)
         self.Timer.timeout.connect(self.update_time)
         self.Timer.start(1000)
         self.update_time()

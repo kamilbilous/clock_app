@@ -1,7 +1,8 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout
 from PyQt5.QtCore import QTimer, QTime, Qt
-
+#TODO: Changable colors
+#TODO: Saving the time to a .txt file?
 class Stoper(QWidget):
     def __init__(self):
         super().__init__()
@@ -15,6 +16,7 @@ class Stoper(QWidget):
     def initUI(self):
         self.setWindowTitle("Stoper")
         self.setGeometry(800, 300, 500, 300)
+
         vbox = QVBoxLayout()
         vbox.addWidget(self.time_label)
 
@@ -31,13 +33,27 @@ class Stoper(QWidget):
         vbox.addLayout(hbox)
 
         self.setStyleSheet("""
+        QWidget {
+        background-color:black;
+        color: white;
+        }
+        
         QPushButton, QLabel{
             padding : 20px;
         }
         QPushButton {
-            font-size: 30px;
-            color: white;
-            background-color: black;   
+            border: 2px solid white;
+            min_width: 100px;
+            min_height: 30px;
+            padding: 15px;
+            font-size: 20px;
+            border-radius: 10px}
+            QPushButton:hover {
+                background-color: darkgray;
+            }
+        }
+        QPushButton:hover {
+            background-color: darkgray;
         }
         QLabel {
             font-size: 60px;
@@ -45,6 +61,8 @@ class Stoper(QWidget):
             background-color: black;
             border-radius : 20px
         }
+        
+        
         """)
 
         self.start_button.clicked.connect(self.start) #type: ignore
