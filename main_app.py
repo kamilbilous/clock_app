@@ -15,7 +15,7 @@ class Menu(QWidget):
         super().__init__()
 
         self.setWindowTitle("Main Menu")
-        self.setGeometry(800, 300, 600, 400)
+        self.setGeometry(800, 300, 800, 600)
         self.setStyleSheet("background-color:black; color: white;")
 
         self.stack = QStackedWidget(self)

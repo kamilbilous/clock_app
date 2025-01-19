@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QComboBox, QPushButton, QDialog
+from PyQt5.QtWidgets import QApplication, QVBoxLayout, QHBoxLayout, QLabel, QComboBox, QPushButton, QDialog
 from PyQt5.QtCore import Qt
 
 class Wheel(QDialog):
