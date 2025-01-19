@@ -6,10 +6,6 @@ from clock import Clock
 from stoper import Stoper
 from timer import Timer
 
-
-
-
-
 class Menu(QWidget):
     def __init__(self):
         super().__init__()

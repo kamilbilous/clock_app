@@ -1,12 +1,11 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QPushButton, QHBoxLayout,QStackedWidget
-from PyQt5.QtCore import QTimer, QTime, Qt
+import pytz
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QPushButton, QHBoxLayout,QStackedWidget,QDialog
+from PyQt5.QtCore import QTimer, QTime, Qt, QDateTime
 from PyQt5.QtGui import QFontDatabase
 from analog_clock import AnalogClock
+from timezones import Timezones
 
-
-
-#IN_PROGRESS : Diff timezones
 #TODO : Changable colors?
 
 
@@ -17,11 +16,14 @@ class Clock(QWidget):
         self.analog_button = QPushButton("Analog")
         self.digital_button = QPushButton("Digital")
         self.timezones_button = QPushButton("Timezones")
+        self.timezones_label = QLabel("Current timezone: Not selected")
+        self.timezones_widget = Timezones()
         self.stack = QStackedWidget(self)
         self.stack.setGeometry(0, 50, 800, 750)
         self.analog_widget = AnalogClock()
         self.TimeLabel = QLabel(self)
         self.Timer = QTimer(self)
+        self.selected_timezone = None
 
         self.initUI()
     def initUI(self):
@@ -43,7 +45,7 @@ class Clock(QWidget):
             QPushButton:hover {
                 background-color: darkgray;
             }
-        }
+        
         """
 
         )
@@ -53,7 +55,9 @@ class Clock(QWidget):
         self.timezones_button.setStyleSheet(self.analog_button.styleSheet())
         self.analog_button.clicked.connect(self.show_page_analog)
         self.digital_button.clicked.connect(self.show_digital_time)
+        self.timezones_button.clicked.connect(self.show_page_timezones)
         vbox.addLayout(hbox)
+        vbox.addWidget(self.timezones_label)
         vbox.addWidget(self.TimeLabel)
         vbox.addWidget(self.stack)
 
@@ -85,14 +89,24 @@ class Clock(QWidget):
             font-size: 120px;
             font-weight: bold
         }""")
-
+        self.timezones_widget.setStyleSheet("font-size: 20px")
         self.Timer.timeout.connect(self.update_time)
+        self.timezones_label.setStyleSheet("font-size:20px")
+        self.timezones_label.setText(f"Current timezone: {self.selected_timezone}")
         self.Timer.start(1000)
         self.update_time()
 
     def update_time(self):
-        current_time = QTime.currentTime().toString("hh:mm:ss")
-        self.TimeLabel.setText(current_time)
+        if self.selected_timezone:
+            utc_now = QDateTime.currentDateTime().toUTC().toPyDateTime()
+            timezone = pytz.timezone(self.selected_timezone)
+            time_in_timezone = pytz.utc.localize(utc_now).astimezone(timezone)
+            self.TimeLabel.setText(time_in_timezone.strftime("%H:%M:%S"))
+            self.timezones_label.setText(f"Current timezone: {self.selected_timezone}")
+        else:
+            current_time = QTime.currentTime().toString("hh:mm:ss")
+            self.TimeLabel.setText(current_time)
+
     def show_digital_time(self):
         if self.stack.indexOf(self.TimeLabel) == -1:
             self.stack.addWidget(self.TimeLabel)
@@ -104,6 +118,24 @@ class Clock(QWidget):
             self.stack.addWidget(self.analog_widget)
         self.stack.setCurrentWidget(self.analog_widget)
         self.timezones_button.setVisible(False)
+
+    def show_page_timezones(self):
+        dialog = Timezones()
+        if dialog.exec_() == QDialog.Accepted:  # Wait for user to select and press "OK"
+            selected_timezone = dialog.get_timezone()
+            if selected_timezone:
+                self.selected_timezone = selected_timezone
+                self.update_time()  # Immediately update time
+
+                self.Timer.timeout.disconnect()
+                self.Timer.timeout.connect(self.update_time)
+                self.Timer.start(1000)
+                self.timezones_label.setText(f"Current timezone: {self.selected_timezone}")
+                self.show_digital_time()
+
+
+
+
 
 
 

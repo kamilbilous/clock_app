@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QVBoxLay
 from PyQt5.QtCore import QTimer, QTime, Qt
 #TODO: Changable colors
 #TODO: Saving the time to a .txt file?
+#TOOD: Adding timestamps on stop
 class Stoper(QWidget):
     def __init__(self):
         super().__init__()
