@@ -6,7 +6,7 @@ from PyQt5.QtGui import QFontDatabase
 from analog_clock import AnalogClock
 from timezones import Timezones
 
-#TODO : Changable colors?
+
 
 
 class Clock(QWidget):

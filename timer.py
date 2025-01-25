@@ -1,9 +1,7 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox
 from PyQt5.QtCore import QTimer, QTime, Qt
 from timer_select import Wheel
-#TODO: Add sound on timer hitting 0
-#TODO: Diff styles
 
 class Timer(QWidget):
     def __init__(self):
@@ -101,6 +99,18 @@ class Timer(QWidget):
             self.time_label.setText(self.format_time(self.time))
         else:
             self.timer.stop()
+            self.show_popup()
+
+    def show_popup(self):
+        msg = QMessageBox()
+        msg.setWindowTitle("Timer Finished")
+        msg.setText("Time is up!")
+        msg.setStyleSheet("background-color:black; color:white;font-size:60px")
+        msg.setIcon(QMessageBox.Information)
+        ok_button = msg.addButton("OK", QMessageBox.AcceptRole)
+        ok_button.setStyleSheet(self.start_button.styleSheet())
+        msg.exec_()
+
     def open_tumbler(self):
         popup = Wheel()
         if popup.exec_():
